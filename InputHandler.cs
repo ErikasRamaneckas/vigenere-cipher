@@ -8,7 +8,7 @@ namespace InformacijosSaugumas1
 {
     public class InputHandler
     {
-        public static void TextEncryption()
+        public static void TextEncryption(bool useAscii)
         {
             string originalText = Validator.GetValidInput("Įveskite pradinį tekstą: ", "Pradinis tekstas negali būti tuščias.");
             if(originalText == null)
@@ -25,14 +25,24 @@ namespace InformacijosSaugumas1
             KeyGenerator keyGenerator = new KeyGenerator();
             string generatedKey = keyGenerator.generateKey(originalText, key);
 
+            if(useAscii)
+            {
+                string resultAscii = VigenereCipher.EncryptASCII(originalText, generatedKey);
+                Console.WriteLine($"\nUžsifruotas tekstas (ASCII): {resultAscii}");
+                return;
+            }
+
+            key = Validator.CheckKey(VigenereCipher.CipherLetters, key, "Raktas privalo būti sudarytas iš abėcėlės simbolių.");
+            if(key == null)
+            {
+                return;
+            }
+            
             string result = VigenereCipher.Encrypt(originalText, generatedKey);
             Console.WriteLine($"\nUžsifruotas tekstas: {result}");
-
-            string resultAscii = VigenereCipher.EncryptASCII(originalText, generatedKey);
-            Console.WriteLine($"\nUžsifruotas tekstas (ASCII): {resultAscii}");
         }
 
-        private static void DecryptText(bool useAscii)
+        public static void TextDecryption(bool useAscii)
         {
             string cipherText = Validator.GetValidInput("Įveskite užsifruotą tekstą: ", "Užšifruotas tekstas negali būti tuščias.");
             if(cipherText == null)
@@ -49,27 +59,15 @@ namespace InformacijosSaugumas1
             KeyGenerator keyGenerator = new KeyGenerator();
             string generatedKey = keyGenerator.generateKey(cipherText, key);
 
-            string result;
             if (useAscii)
             {
-                result = VigenereCipher.DecryptASCII(cipherText, generatedKey);
-                Console.WriteLine($"Dešifruotas tekstas (ASCII): {result}");
+                string resultAscii = VigenereCipher.DecryptASCII(cipherText, generatedKey);
+                Console.WriteLine($"Dešifruotas tekstas (ASCII): {resultAscii}");
+                return;
             }
-            else
-            {
-                result = VigenereCipher.Decrypt(cipherText, generatedKey);
-                Console.WriteLine($"Dešifruotas tekstas: {result}");
-            }
-        }
 
-        public static void TextDecryption()
-        {
-            DecryptText(false);
-        }
-
-        public static void TextDecryptionAscii()
-        {
-            DecryptText(true);
+            string result = VigenereCipher.Decrypt(cipherText, generatedKey);
+            Console.WriteLine($"Dešifruotas tekstas: {result}");
         }
     }
 }

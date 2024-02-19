@@ -13,9 +13,10 @@ namespace InformacijosSaugumas1
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
         'R', 'S','T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-         private static int _lowerBound = 32;
-         private static int _upperBound = 127;
-         private static int _asciiLength = _upperBound - _lowerBound;
+        public static char[] CipherLetters { get {return _cipherLetters; } }
+        private static int _lowerBound = 32;
+        private static int _upperBound = 127;
+        private static int _asciiLength = _upperBound - _lowerBound;
         public static string Encrypt(string originalText, string generatedKey)
         {
             string cipherText = "";
